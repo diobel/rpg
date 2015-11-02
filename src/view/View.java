@@ -11,7 +11,7 @@ import java.util.Scanner;
  * View class that is responsible for interaction with user
  *
  * @author Michał Szubert
- * @version 1.01
+ * @version 1.0
  *
  */
 public class View {
