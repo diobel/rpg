@@ -7,14 +7,32 @@ package model;
 
 import java.util.*;
 
-    interface checkArgumentsInterface {
+/**
+ * Interface which is used to check correctness of arguments with lambda expression
+ * @author Michał Szubert
+ * @version 1.0
+ */
+interface checkArgumentsInterface {
 
-        void checkArguments(List<String> arguments) throws InvalidArgumentsException;
-    }   
+    /**
+     * Method checkArguments is header for lambda expression which is used to check
+     * correctness of arguments
+     * 
+     * @param arguments String list of input arguments, all arguments but last
+     * should be xky where x is integer and y should be one of 4,6,8,10,12,20,
+     * also last argument should be s or r representing type of drawing game
+     * @throws InvalidArgumentsException is thrown when arguments are invalid
+     */
+    void checkArguments(List<String> arguments) throws InvalidArgumentsException;
+}
+
 /**
  * Class which is used to validate input arguments correctness and perform
- * simulation of dice throwing depending on game type chosen
- *
+ * simulation of dice throwing depending on game type chosen.
+ * Type of input data of this class is List of Strings and can be set using
+ * with method setArgumentsList.
+ * Type of output data of this class is List of Integers and can be set using
+ * with method getResultList.
  * @author Michał Szubert
  * @version 1.1
  */
@@ -65,8 +83,6 @@ public class Model {
         return this.resultList;
     }
 
-
-
     /**
      * Method used to determine if parameter String is numeric
      *
@@ -110,8 +126,9 @@ public class Model {
     /**
      * Method which determines correctness of input arguments
      *
-     * @param arguments String list of input arguments, all arguments but last
-     * should by xky where x is integer and y should be one of 4,6,8,10,12,20
+     * @param argList arguments String list of input arguments, all arguments
+     * but last should be xky where x is integer and y should be one of
+     * 4,6,8,10,12,20
      * @throws InvalidArgumentsException Exception is thrown process of
      * validation finds that arguments are invalid
      */
@@ -159,7 +176,7 @@ public class Model {
      * dice is thrown as many times as argument in diceArgumentsArray parameter
      * describes
      *
-     * @param diceArgumentsArray String list of input arguments, all arguments
+     * @param diceArgumentsList String list of input arguments, all arguments
      * but last should by xky where x is integer and y should be one of
      * 4,6,8,10,12,20
      * @return result Integer list which contains results of each dice throw,
@@ -202,7 +219,7 @@ public class Model {
      * achieving max value on current dice) in diceArgumentsArray parameter
      * describes
      *
-     * @param diceArgumentsArray String list of input arguments, all arguments
+     * @param diceArgumentsList String list of input arguments, all arguments
      * but last should by xky where x is integer and y should be one of
      * 4,6,8,10,12,20
      * @return result Integer list which contains results of each dice throw,
