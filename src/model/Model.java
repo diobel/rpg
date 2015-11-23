@@ -7,6 +7,10 @@ package model;
 
 import java.util.*;
 
+    interface checkArgumentsInterface {
+
+        void checkArguments(List<String> arguments) throws InvalidArgumentsException;
+    }   
 /**
  * Class which is used to validate input arguments correctness and perform
  * simulation of dice throwing depending on game type chosen
@@ -35,33 +39,34 @@ public class Model {
 
     /**
      * Method which sets list of Strings input arguments within model class
+     *
      * @param inputArgumentsList List of Strings input Arguments
      */
-    public void setArgumentsList(List<String> inputArgumentsList)
-    {
+    public void setArgumentsList(List<String> inputArgumentsList) {
         this.argumentsList.addAll(inputArgumentsList);
     }
-    
+
     /**
      * Method whichs gets input argument list of Strings from within model class
-     * @return argumentsList list of Strings input arguments from within model class
+     *
+     * @return argumentsList list of Strings input arguments from within model
+     * class
      */
-    
-    public List <String> getArgumentsList()
-    {
+    public List<String> getArgumentsList() {
         return this.argumentsList;
     }
-    
+
     /**
      * Method whichs gets result list of Integers from within model class
+     *
      * @return resultList list of Integers results from within model class
      */
-    
-    public List <Integer> getResultList()
-    {
+    public List<Integer> getResultList() {
         return this.resultList;
     }
-    
+
+
+
     /**
      * Method used to determine if parameter String is numeric
      *
@@ -69,7 +74,6 @@ public class Model {
      * @return true when input String is numeric, false when input String is not
      * numeric
      */
-       
     private boolean stringNumericCheck(String str) {
         for (char c : str.toCharArray()) {
             if (!Character.isDigit(c)) {
@@ -85,7 +89,8 @@ public class Model {
      *
      * @param strList list of Strings which contains arguments with white spaces
      * and empty Strings
-     * @return cleanedList list of Strings free of spare white spaces and empty Strings
+     * @return cleanedList list of Strings free of spare white spaces and empty
+     * Strings
      */
     private List<String> clearWhiteSpacesEmptyStrings(List<String> strList) {
         for (String examinedString : strList) {
@@ -111,37 +116,42 @@ public class Model {
      * validation finds that arguments are invalid
      */
     private void validateArguments(List<String> argList) throws InvalidArgumentsException {
-        if ((argList.isEmpty()) || (argList.size() == 1)) {
-            throw new InvalidArgumentsException("Lack of Arguments Exception");
-        }
-        if ((!argList.get(argList.size() - 1).equals("r")) && (!argList.get(argList.size() - 1).equals("s"))) {
-            throw new InvalidArgumentsException("Invalid Game Type Exception");
-        }
-        for (int i = 0; i <= argList.size() - 2; i++) {
-            if (!argList.get(i).contains("k")) {
-                throw new InvalidArgumentsException("Invalid Dice Argument Structure Exception");
+
+        checkArgumentsInterface checkArgs = (n) -> {
+            if ((n.isEmpty()) || (n.size() == 1)) {
+                throw new InvalidArgumentsException("Lack of Arguments Exception");
             }
-            int charCount = 0;
-            for (char c : argList.get(i).toCharArray()) {
-                if (c == 'k') {
-                    charCount++;
+            if ((!n.get(n.size() - 1).equals("r")) && (!n.get(n.size() - 1).equals("s"))) {
+                throw new InvalidArgumentsException("Invalid Game Type Exception");
+            }
+            for (int i = 0; i <= n.size() - 2; i++) {
+                if (!n.get(i).contains("k")) {
+                    throw new InvalidArgumentsException("Invalid Dice Argument Lack of k Exception");
+                }
+                int charCount = 0;
+                for (char c : n.get(i).toCharArray()) {
+                    if (c == 'k') {
+                        charCount++;
+                    }
+                }
+                if (charCount != 1) {
+                    throw new InvalidArgumentsException("Invalid Dice Argument Structure Exception");
+                }
+                String[] examinedString = n.get(i).split("k");
+                if ((examinedString.length <= 1) || (examinedString[0].equals("")) || (examinedString[1].equals(""))) {
+                    throw new InvalidArgumentsException("Invalid Dice Structure Argument Exception");
+                }
+                if ((!stringNumericCheck(examinedString[0])) || (!stringNumericCheck(examinedString[1]))) {
+                    throw new InvalidArgumentsException("Invalid Dice Argument Numeric Exception");
+                }
+                int enteredDiceType = Integer.parseInt(examinedString[1], 10);
+                if (!(((enteredDiceType >= 4) && (enteredDiceType <= 12) && (enteredDiceType % 2 == 0)) || (enteredDiceType == 20))) {
+                    throw new InvalidArgumentsException("Invalid Dice Type Exception");
                 }
             }
-            if (charCount != 1) {
-                throw new InvalidArgumentsException("Invalid Dice Argument Structure Exception");
-            }
-            String[] examinedString = argList.get(i).split("k");
-            if ((examinedString.length <= 1) || (examinedString[0].equals("")) || (examinedString[1].equals(""))) {
-                throw new InvalidArgumentsException("Invalid Dice Structure Argument Exception");
-            }
-            if ((!stringNumericCheck(examinedString[0])) || (!stringNumericCheck(examinedString[1]))) {
-                throw new InvalidArgumentsException("Invalid Dice Argument Numeric Exception");
-            }
-            int enteredDiceType = Integer.parseInt(examinedString[1], 10);
-            if (!(((enteredDiceType >= 4) && (enteredDiceType <= 12) && (enteredDiceType % 2 == 0)) || (enteredDiceType == 20))) {
-                throw new InvalidArgumentsException("Invalid Dice Type Exception");
-            }
-        }
+
+        };
+        checkArgs.checkArguments(argList);
     }
 
     /**
@@ -152,8 +162,8 @@ public class Model {
      * @param diceArgumentsArray String list of input arguments, all arguments
      * but last should by xky where x is integer and y should be one of
      * 4,6,8,10,12,20
-     * @return result Integer list which contains results of each dice throw, also last
-     * element contains sum of all throws
+     * @return result Integer list which contains results of each dice throw,
+     * also last element contains sum of all throws
      */
     private List<Integer> rpgModeDraw(List<String> diceArgumentsList) {
         Integer sum = 0;
@@ -195,8 +205,8 @@ public class Model {
      * @param diceArgumentsArray String list of input arguments, all arguments
      * but last should by xky where x is integer and y should be one of
      * 4,6,8,10,12,20
-     * @return result Integer list which contains results of each dice throw, also last
-     * element contains rpg-sum of all throws
+     * @return result Integer list which contains results of each dice throw,
+     * also last element contains rpg-sum of all throws
      */
     private List<Integer> summingModeDraw(List<String> diceArgumentsList) {
         Integer sum = 0;
@@ -227,8 +237,8 @@ public class Model {
      * @param diceArgumentsList String list of input arguments, all arguments
      * but last should by xky where x is integer and y should be one of
      * 4,6,8,10,12,20
-     * @return result Integer List which contains results of each dice throw, also last
-     * element containssum of all throws
+     * @return result Integer List which contains results of each dice throw,
+     * also last element containssum of all throws
      * @throws InvalidArgumentsException Exception is thrown process of
      * validation finds that arguments are invalid
      */
